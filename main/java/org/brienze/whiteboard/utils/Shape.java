@@ -1,31 +1,74 @@
 package org.brienze.whiteboard.utils;
 
-public class Shape {
+import javax.swing.*;
 
-    public Shape(String shape, int x, int y, int width, int height) {
-        this.shape = shape;
+public abstract class Shape extends JPanel {
+
+    public Shape(int x, int y) {
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
+        this.tempX = x;
+        this.tempY = y;
+        this.x1 = 0;
+        this.y1 = 0;
+        this.x2 = 0;
+        this.y2 = 0;
+        this.width = 0;
+        this.height = 0;
+        this.setBounds(x, y, width, height);
+        this.setOpaque(false);
     }
 
-    private final String shape;
-    private int x;
-    private int y;
+    public Shape(String text, int x, int y) {
+        this.x = x;
+        this.y = y;
+        this.tempX = x;
+        this.tempY = y;
+        this.x1 = 0;
+        this.y1 = 0;
+        this.x2 = 0;
+        this.y2 = 0;
+        this.width = 400;
+        this.height = 20;
+        this.text = text;
+        this.setBounds(x, y, width, height);
+        this.setOpaque(false);
+    }
+
+    private final int x;
+    private final int y;
+    private int tempX;
+    private int tempY;
+    private int x1;
+    private int y1;
+    private int x2;
+    private int y2;
     private int width;
     private int height;
-
-    public String getShape() {
-        return shape;
-    }
+    private String text;
 
     public int getX() {
-        return x;
+        return tempX;
     }
 
     public int getY() {
-        return y;
+        return tempY;
+    }
+
+    protected int getX1() {
+        return x1;
+    }
+
+    protected int getY1() {
+        return y1;
+    }
+
+    protected int getX2() {
+        return x2;
+    }
+
+    protected int getY2() {
+        return y2;
     }
 
     public int getWidth() {
@@ -36,19 +79,49 @@ public class Shape {
         return height;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public String getText() {
+        return text;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
+    public void update(int realX, int realY) {
+        if (text != null) {
+            tempX = realX;
+            tempY = realY;
 
-    public void setWidth(int width) {
+            this.setBounds(tempX, tempY, this.width, this.height);
+
+            return;
+        }
+
+        int width = realX - x;
+        int height = realY - y;
+
+        tempX = x;
+        tempY = y;
+
+        if (width < 0) {
+            width *= -1;
+            tempX -= width;
+            x1 = width;
+            x2 = 0;
+        } else {
+            x2 = width;
+            x1 = 0;
+        }
+
+        if (height < 0) {
+            height *= -1;
+            tempY -= height;
+            y1 = height;
+            y2 = 0;
+        } else {
+            y2 = height;
+            y1 = 0;
+        }
+
         this.width = width;
-    }
-
-    public void setHeight(int height) {
         this.height = height;
+
+        this.setBounds(tempX, tempY, width, height);
     }
 }

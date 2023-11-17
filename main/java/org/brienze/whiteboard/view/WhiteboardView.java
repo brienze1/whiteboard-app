@@ -1,17 +1,21 @@
 package org.brienze.whiteboard.view;
 
+import org.brienze.whiteboard.utils.Rectangle;
+import org.brienze.whiteboard.utils.*;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.UUID;
 
 @Component
 public class WhiteboardView {
 
+    private final Whiteboard whiteboard;
     private final JFrame window = new JFrame();
-    private final Canvas whiteboard = new Canvas(); //TODO this needs to be autowired
     private final JPanel leftMenu = new JPanel();
     private final JTextField textInput = new JTextField();
     private final JButton squareButton = new JButton("[ ]");
@@ -26,7 +30,11 @@ public class WhiteboardView {
     private int drawingWidth = 0;
     private int drawingHeight = 0;
 
-    public WhiteboardView() {
+    private UUID currentShapeId;
+
+    public WhiteboardView(Whiteboard whiteboard) {
+        this.whiteboard = whiteboard;
+
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e1) {
@@ -85,36 +93,20 @@ public class WhiteboardView {
 
                 drawingX = e.getX();
                 drawingY = e.getY();
+
+                switch (selectedShape) {
+                    case "square" -> currentShapeId = whiteboard.draw(new Rectangle(drawingX, drawingY));
+                    case "circle" -> currentShapeId = whiteboard.draw(new Circle(drawingX, drawingY));
+                    case "text" -> currentShapeId = whiteboard.draw(new Text(textInput.getText(), drawingX, drawingY));
+                    case "line" -> currentShapeId = whiteboard.draw(new Line(drawingX, drawingY));
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
 
-                Graphics g = whiteboard.getGraphics();
-
-                drawingWidth = e.getX() - drawingX;
-                drawingHeight = e.getY() - drawingY;
-
-                int tempDrawingX = drawingX;
-                int tempDrawingY = drawingY;
-
-                if (drawingWidth < 0) {
-                    tempDrawingX += drawingWidth;
-                    drawingWidth *= -1;
-                }
-
-                if (drawingHeight < 0) {
-                    tempDrawingY += drawingHeight;
-                    drawingHeight *= -1;
-                }
-
-                switch (selectedShape) {
-                    case "square" -> g.drawRect(tempDrawingX, tempDrawingY, drawingWidth, drawingHeight);
-                    case "circle" -> g.drawOval(tempDrawingX, tempDrawingY, drawingWidth, drawingHeight);
-                    case "text" -> g.drawString(textInput.getText(), drawingX, drawingY);
-                    case "line" -> g.drawLine(drawingX, drawingY, e.getX(), e.getY());
-                }
+                whiteboard.update(currentShapeId, e.getX(), e.getY());
             }
         });
 
@@ -123,28 +115,7 @@ public class WhiteboardView {
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
 
-                Graphics g = whiteboard.getGraphics();
-
-                drawingWidth = e.getX() - drawingX;
-                drawingHeight = e.getY() - drawingY;
-
-                int tempDrawingX = drawingX;
-                int tempDrawingY = drawingY;
-
-                if (drawingWidth < 0) {
-                    tempDrawingX += drawingWidth;
-                    drawingWidth *= -1;
-                }
-
-                if (drawingHeight < 0) {
-                    tempDrawingY += drawingHeight;
-                    drawingHeight *= -1;
-                }
-
-//                switch (selectedShape) {
-//                    case "square" ->  g.drawRect(drawingX, drawingY, drawingWidth, drawingHeight);
-//                    case "circle" ->  g.drawOval(drawingX, drawingY, drawingWidth, drawingHeight);
-//                }
+                whiteboard.update(currentShapeId, e.getX(), e.getY());
             }
         });
 

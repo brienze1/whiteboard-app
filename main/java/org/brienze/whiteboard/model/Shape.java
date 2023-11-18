@@ -1,10 +1,12 @@
-package org.brienze.whiteboard.utils;
+package org.brienze.whiteboard.model;
 
 import javax.swing.*;
+import java.util.UUID;
 
 public abstract class Shape extends JPanel {
 
     public Shape(int x, int y) {
+        this.id = UUID.randomUUID();
         this.x = x;
         this.y = y;
         this.tempX = x;
@@ -20,6 +22,7 @@ public abstract class Shape extends JPanel {
     }
 
     public Shape(String text, int x, int y) {
+        this.id = UUID.randomUUID();
         this.x = x;
         this.y = y;
         this.tempX = x;
@@ -35,6 +38,7 @@ public abstract class Shape extends JPanel {
         this.setOpaque(false);
     }
 
+    private final UUID id;
     private final int x;
     private final int y;
     private int tempX;
@@ -46,6 +50,10 @@ public abstract class Shape extends JPanel {
     private int width;
     private int height;
     private String text;
+
+    public UUID getId() {
+        return id;
+    }
 
     public int getX() {
         return tempX;

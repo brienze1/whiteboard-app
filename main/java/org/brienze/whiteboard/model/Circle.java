@@ -1,4 +1,4 @@
-package org.brienze.whiteboard.utils;
+package org.brienze.whiteboard.model;
 
 import java.awt.*;
 

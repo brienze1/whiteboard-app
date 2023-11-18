@@ -1,7 +1,10 @@
 package org.brienze.whiteboard.view;
 
-import org.brienze.whiteboard.utils.Rectangle;
-import org.brienze.whiteboard.utils.*;
+import org.brienze.whiteboard.model.Circle;
+import org.brienze.whiteboard.model.Line;
+import org.brienze.whiteboard.model.Rectangle;
+import org.brienze.whiteboard.model.Text;
+import org.brienze.whiteboard.utils.Whiteboard;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -18,6 +21,8 @@ public class WhiteboardView {
     private final JFrame window = new JFrame();
     private final JPanel leftMenu = new JPanel();
     private final JTextField textInput = new JTextField();
+    private final JTextField whiteboardInput = new JTextField();
+    private final JButton loadButton = new JButton("Load");
     private final JButton squareButton = new JButton("[ ]");
     private final JButton circleButton = new JButton("( )");
     private final JButton textButton = new JButton("A");
@@ -27,9 +32,6 @@ public class WhiteboardView {
     private String selectedShape = "";
     private int drawingX = 0;
     private int drawingY = 0;
-    private int drawingWidth = 0;
-    private int drawingHeight = 0;
-
     private UUID currentShapeId;
 
     public WhiteboardView(Whiteboard whiteboard) {
@@ -70,8 +72,9 @@ public class WhiteboardView {
         textButton.setBounds(90, 10, 30, 30);
         lineButton.setBounds(130, 10, 30, 30);
         clearButton.setBounds(130, 90, 30, 30);
-
         textInput.setBounds(10, 50, 150, 30);
+        loadButton.setBounds(10, 370, 70, 30);
+        whiteboardInput.setBounds(10, 400, 150, 30);
 
         leftMenu.setBounds(10, 10, 170, 450);
         leftMenu.setBorder(new BasicBorders.ButtonBorder(Color.gray, Color.darkGray, Color.gray, Color.gray));
@@ -81,8 +84,10 @@ public class WhiteboardView {
         leftMenu.add(circleButton);
         leftMenu.add(textButton);
         leftMenu.add(lineButton);
-        leftMenu.add(textInput);
         leftMenu.add(clearButton);
+        leftMenu.add(textInput);
+        leftMenu.add(loadButton);
+        leftMenu.add(whiteboardInput);
     }
 
     private void initializeButtonActions() {
@@ -106,7 +111,7 @@ public class WhiteboardView {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
 
-                whiteboard.update(currentShapeId, e.getX(), e.getY());
+                whiteboard.save(currentShapeId, e.getX(), e.getY());
             }
         });
 
@@ -150,7 +155,14 @@ public class WhiteboardView {
         clearButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                whiteboard.repaint();
+                whiteboard.clear();
+            }
+        });
+
+        loadButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                whiteboard.load(whiteboardInput.getText());
             }
         });
     }

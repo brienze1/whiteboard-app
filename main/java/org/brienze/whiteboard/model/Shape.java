@@ -1,12 +1,49 @@
 package org.brienze.whiteboard.model;
 
+import org.brienze.whiteboard.dto.ShapeDto;
+import org.brienze.whiteboard.enums.Type;
+
 import javax.swing.*;
 import java.util.UUID;
 
-public abstract class Shape extends JPanel {
+public class Shape extends JPanel {
 
-    public Shape(int x, int y) {
+    protected Shape(UUID id,
+                 String whiteboardName,
+                 Type type,
+                 int x,
+                 int y,
+                 int tempX,
+                 int tempY,
+                 int x1,
+                 int y1,
+                 int x2,
+                 int y2,
+                 int width,
+                 int height,
+                 String text) {
+        this.id = id;
+        this.whiteboardName = whiteboardName;
+        this.type = type;
+        this.x = x;
+        this.y = y;
+        this.tempX = tempX;
+        this.tempY = tempY;
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.width = width;
+        this.height = height;
+        this.text = text;
+        this.setBounds(tempX, tempY, width, height);
+        this.setOpaque(false);
+    }
+
+    public Shape(String whiteboardName, Type type, int x, int y) {
         this.id = UUID.randomUUID();
+        this.whiteboardName = whiteboardName;
+        this.type = type;
         this.x = x;
         this.y = y;
         this.tempX = x;
@@ -17,12 +54,14 @@ public abstract class Shape extends JPanel {
         this.y2 = 0;
         this.width = 0;
         this.height = 0;
-        this.setBounds(x, y, width, height);
+        this.setBounds(tempX, tempY, width, height);
         this.setOpaque(false);
     }
 
-    public Shape(String text, int x, int y) {
+    public Shape(String whiteboardName, String text, int x, int y) {
         this.id = UUID.randomUUID();
+        this.whiteboardName = whiteboardName;
+        this.type = Type.TEXT;
         this.x = x;
         this.y = y;
         this.tempX = x;
@@ -34,11 +73,13 @@ public abstract class Shape extends JPanel {
         this.width = 400;
         this.height = 20;
         this.text = text;
-        this.setBounds(x, y, width, height);
+        this.setBounds(tempX, tempY, width, height);
         this.setOpaque(false);
     }
 
     private final UUID id;
+    private final String whiteboardName;
+    private final Type type;
     private final int x;
     private final int y;
     private int tempX;
@@ -131,5 +172,9 @@ public abstract class Shape extends JPanel {
         this.height = height;
 
         this.setBounds(tempX, tempY, width, height);
+    }
+
+    public ShapeDto toDto() {
+        return new ShapeDto(id, whiteboardName, type, x, y, tempX, tempY, x1, y1, x2, y2, width, height, text);
     }
 }

@@ -1,8 +1,12 @@
 package org.brienze.whiteboard.service;
 
+import org.brienze.whiteboard.dto.ShapeDto;
+import org.brienze.whiteboard.dto.WhiteboardStateDto;
 import org.brienze.whiteboard.model.Shape;
 import org.brienze.whiteboard.model.WhiteboardState;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
@@ -24,19 +28,27 @@ public class WhiteboardWebService {
     @Async
     @Retryable(retryFor = Exception.class, maxAttempts = 2, backoff = @Backoff(delay = 100))
     public void save(String name, Shape shape) {
-//        restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(null), String.class);
+        restTemplate.exchange(url + "/" + name + "/shapes", HttpMethod.POST, new HttpEntity<>(shape.toDto(), null), ShapeDto.class);
         System.out.println("Save Shape for whiteboard: " + name);
     }
 
-    public WhiteboardState getState(String whiteboardName) {
+    public WhiteboardState getState(String name) {
+        WhiteboardStateDto state;
         try {
-//        restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(null), String.class);
+            state = restTemplate.exchange(url + "/" + name, HttpMethod.GET, new HttpEntity<>(null), WhiteboardStateDto.class).getBody();
         } catch (Exception ex) {
-//        restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(null), String.class);
+            state = new WhiteboardStateDto(name);
+            state = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(state, null), WhiteboardStateDto.class).getBody();
         }
-        System.out.println("Get whiteboard state: " + whiteboardName);
 
-        return new WhiteboardState(whiteboardName);
+        System.out.println("Get whiteboard state: " + name);
+
+        return state.toWhiteboardState();
     }
 
+    public WhiteboardState clearState(String name) {
+        return restTemplate.exchange(url + "/" + name + "/clear", HttpMethod.POST, new HttpEntity<>(null), WhiteboardStateDto.class)
+                           .getBody()
+                           .toWhiteboardState();
+    }
 }

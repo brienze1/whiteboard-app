@@ -1,1 +1,4 @@
-whiteboard.api.url: test
+whiteboard.api.url: http://localhost:8080/whiteboards
+
+server:
+  port: 0

@@ -1,21 +1,23 @@
 package org.brienze.whiteboard.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class WhiteboardState {
+
+    public WhiteboardState(String name, LocalDateTime clearedAt, Set<Shape> shapes) {
+        this.name = name;
+        this.clearedAt = clearedAt;
+        this.shapes = shapes;
+    }
 
     public WhiteboardState(String name) {
         this.name = name;
     }
 
-    @JsonProperty("name")
-    private String name;
-    @JsonProperty("cleared_at")
+    private final String name;
     private LocalDateTime clearedAt;
-    @JsonProperty("shapes")
     private Set<Shape> shapes;
 
     public String getName() {
@@ -37,9 +39,13 @@ public class WhiteboardState {
     }
 
     public boolean mustUpdate(Map<UUID, Shape> shapeMap) {
-        return Optional.ofNullable(this.shapes)
+        return !Optional.ofNullable(this.shapes)
                        .orElse(new HashSet<>())
                        .stream()
-                       .anyMatch(shape -> !shapeMap.containsKey(shape.getId()));
+                       .filter(shape -> !shapeMap.containsKey(shape.getId()))
+                       .peek(shape -> shapeMap.put(shape.getId(), shape))
+                       .collect(Collectors.toSet())
+                       .isEmpty();
     }
+
 }

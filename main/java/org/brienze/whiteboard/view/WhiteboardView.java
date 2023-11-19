@@ -1,10 +1,7 @@
 package org.brienze.whiteboard.view;
 
-import org.brienze.whiteboard.model.Circle;
-import org.brienze.whiteboard.model.Line;
-import org.brienze.whiteboard.model.Rectangle;
-import org.brienze.whiteboard.model.Text;
-import org.brienze.whiteboard.utils.Whiteboard;
+import org.brienze.whiteboard.enums.Type;
+import org.brienze.whiteboard.viewmodel.WhiteboardViewModel;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -12,12 +9,13 @@ import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
 public class WhiteboardView {
 
-    private final Whiteboard whiteboard;
+    private final WhiteboardViewModel whiteboardViewModel;
     private final JFrame window = new JFrame();
     private final JPanel leftMenu = new JPanel();
     private final JTextField textInput = new JTextField();
@@ -29,13 +27,13 @@ public class WhiteboardView {
     private final JButton lineButton = new JButton("|");
     private final JButton clearButton = new JButton("X");
 
-    private String selectedShape = "";
+    private Type selectedShape = null;
     private int drawingX = 0;
     private int drawingY = 0;
     private UUID currentShapeId;
 
-    public WhiteboardView(Whiteboard whiteboard) {
-        this.whiteboard = whiteboard;
+    public WhiteboardView(WhiteboardViewModel whiteboardViewModel) {
+        this.whiteboardViewModel = whiteboardViewModel;
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -57,13 +55,13 @@ public class WhiteboardView {
         window.setTitle("Whiteboard App");
         window.setBounds(0, 0, 700, 500);
         window.setLayout(null);
-        window.add(whiteboard);
+        window.add(whiteboardViewModel);
         window.add(leftMenu);
     }
 
     private void initializeWhiteboard() {
-        whiteboard.setBackground(Color.white);
-        whiteboard.setBounds(200, 0, 500, 500);
+        whiteboardViewModel.setBackground(Color.white);
+        whiteboardViewModel.setBounds(200, 0, 500, 500);
     }
 
     private void initializeLeftMenu() {
@@ -91,78 +89,79 @@ public class WhiteboardView {
     }
 
     private void initializeButtonActions() {
-        whiteboard.addMouseListener(new MouseAdapter() {
+        whiteboardViewModel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mouseClicked(e);
 
+                if (whiteboardViewModel.getName() == null) {
+                    String name = Optional.ofNullable(whiteboardInput.getText()).filter(string -> !string.isBlank()).orElse(UUID.randomUUID().toString());
+                    whiteboardInput.setText(name);
+                    whiteboardViewModel.load(name);
+                }
+
                 drawingX = e.getX();
                 drawingY = e.getY();
 
-                switch (selectedShape) {
-                    case "square" -> currentShapeId = whiteboard.draw(new Rectangle(drawingX, drawingY));
-                    case "circle" -> currentShapeId = whiteboard.draw(new Circle(drawingX, drawingY));
-                    case "text" -> currentShapeId = whiteboard.draw(new Text(textInput.getText(), drawingX, drawingY));
-                    case "line" -> currentShapeId = whiteboard.draw(new Line(drawingX, drawingY));
-                }
+                currentShapeId = whiteboardViewModel.draw(selectedShape, textInput.getText(), drawingX, drawingY);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
 
-                whiteboard.save(currentShapeId, e.getX(), e.getY());
+                whiteboardViewModel.save(currentShapeId, e.getX(), e.getY());
             }
         });
 
-        whiteboard.addMouseMotionListener(new MouseAdapter() {
+        whiteboardViewModel.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
 
-                whiteboard.update(currentShapeId, e.getX(), e.getY());
+                whiteboardViewModel.update(currentShapeId, e.getX(), e.getY());
             }
         });
 
         squareButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectedShape = "square";
+                selectedShape = Type.RECTANGLE;
             }
         });
 
         circleButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectedShape = "circle";
+                selectedShape = Type.CIRCLE;
             }
         });
 
         textButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectedShape = "text";
+                selectedShape = Type.TEXT;
             }
         });
 
         lineButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                selectedShape = "line";
+                selectedShape = Type.LINE;
             }
         });
 
         clearButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                whiteboard.clear();
+                whiteboardViewModel.clear();
             }
         });
 
         loadButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                whiteboard.load(whiteboardInput.getText());
+                whiteboardViewModel.load(whiteboardInput.getText());
             }
         });
     }

@@ -1,8 +1,8 @@
-package org.brienze.whiteboard.dto;
+package org.brienze.whiteboard.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.brienze.whiteboard.enums.Type;
-import org.brienze.whiteboard.model.*;
+import org.brienze.whiteboard.api.model.*;
+import org.brienze.whiteboard.api.enums.Type;
 
 import java.util.UUID;
 

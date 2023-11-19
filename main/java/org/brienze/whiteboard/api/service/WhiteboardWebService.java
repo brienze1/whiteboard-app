@@ -1,9 +1,9 @@
-package org.brienze.whiteboard.service;
+package org.brienze.whiteboard.api.service;
 
-import org.brienze.whiteboard.dto.ShapeDto;
-import org.brienze.whiteboard.dto.WhiteboardStateDto;
-import org.brienze.whiteboard.model.Shape;
-import org.brienze.whiteboard.model.WhiteboardState;
+import org.brienze.whiteboard.api.dto.ShapeDto;
+import org.brienze.whiteboard.api.dto.WhiteboardStateDto;
+import org.brienze.whiteboard.api.model.Shape;
+import org.brienze.whiteboard.api.model.WhiteboardState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class WhiteboardWebService {
 
-    @Value("${whiteboard.api.url}")
+    @Value("${whiteboard.api.url:http://localhost:8080/whiteboards}")
     private String url;
 
     private final RestTemplate restTemplate;

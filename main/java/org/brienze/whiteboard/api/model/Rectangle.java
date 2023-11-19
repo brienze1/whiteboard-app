@@ -1,6 +1,6 @@
-package org.brienze.whiteboard.model;
+package org.brienze.whiteboard.api.model;
 
-import org.brienze.whiteboard.enums.Type;
+import org.brienze.whiteboard.api.enums.Type;
 
 import java.awt.*;
 import java.util.UUID;

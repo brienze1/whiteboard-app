@@ -1,4 +1,4 @@
-package org.brienze.whiteboard.model;
+package org.brienze.whiteboard.api.model;
 
 import java.time.LocalDateTime;
 import java.util.*;

@@ -1,7 +1,7 @@
-package org.brienze.whiteboard.model;
+package org.brienze.whiteboard.api.model;
 
-import org.brienze.whiteboard.dto.ShapeDto;
-import org.brienze.whiteboard.enums.Type;
+import org.brienze.whiteboard.api.dto.ShapeDto;
+import org.brienze.whiteboard.api.enums.Type;
 
 import javax.swing.*;
 import java.util.UUID;

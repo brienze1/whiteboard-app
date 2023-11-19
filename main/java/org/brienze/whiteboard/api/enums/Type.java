@@ -1,4 +1,4 @@
-package org.brienze.whiteboard.enums;
+package org.brienze.whiteboard.api.enums;
 
 public enum Type {
 

@@ -1,8 +1,8 @@
-package org.brienze.whiteboard.viewmodel;
+package org.brienze.whiteboard.api.viewmodel;
 
-import org.brienze.whiteboard.enums.Type;
-import org.brienze.whiteboard.model.*;
-import org.brienze.whiteboard.service.WhiteboardWebService;
+import org.brienze.whiteboard.api.enums.Type;
+import org.brienze.whiteboard.api.model.*;
+import org.brienze.whiteboard.api.service.WhiteboardWebService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

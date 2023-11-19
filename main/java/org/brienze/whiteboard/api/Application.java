@@ -1,5 +1,6 @@
-package org.brienze.whiteboard;
+package org.brienze.whiteboard.api;
 
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.retry.annotation.EnableRetry;
@@ -12,6 +13,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class Application  {
     public static void main(String[] args) {
-        new SpringApplicationBuilder(Application.class).headless(false).run(args);
+        new SpringApplicationBuilder(Application.class)
+                .web(WebApplicationType.NONE)
+                .headless(false)
+                .run(args);
     }
 }

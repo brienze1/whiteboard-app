@@ -1,7 +1,7 @@
-package org.brienze.whiteboard.dto;
+package org.brienze.whiteboard.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.brienze.whiteboard.model.WhiteboardState;
+import org.brienze.whiteboard.api.model.WhiteboardState;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;

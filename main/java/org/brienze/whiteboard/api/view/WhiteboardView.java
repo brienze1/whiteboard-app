@@ -1,7 +1,7 @@
-package org.brienze.whiteboard.view;
+package org.brienze.whiteboard.api.view;
 
-import org.brienze.whiteboard.enums.Type;
-import org.brienze.whiteboard.viewmodel.WhiteboardViewModel;
+import org.brienze.whiteboard.api.enums.Type;
+import org.brienze.whiteboard.api.viewmodel.WhiteboardViewModel;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;

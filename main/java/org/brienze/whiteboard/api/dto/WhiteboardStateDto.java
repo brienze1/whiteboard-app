@@ -20,14 +20,14 @@ public class WhiteboardStateDto {
 
     @JsonProperty("name")
     private String name;
-    @JsonProperty("cleared_at")
-    private LocalDateTime clearedAt;
+    @JsonProperty("cleaned_at")
+    private LocalDateTime cleanedAt;
     @JsonProperty("shapes")
     private Set<ShapeDto> shapes;
 
     public WhiteboardState toWhiteboardState() {
         return new WhiteboardState(name,
-                                   clearedAt,
+                                   cleanedAt,
                                    Optional.ofNullable(shapes).orElse(new HashSet<>()).stream().map(ShapeDto::toShape).collect(Collectors.toSet()));
     }
 }

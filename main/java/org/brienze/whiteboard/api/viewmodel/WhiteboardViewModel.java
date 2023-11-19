@@ -54,7 +54,7 @@ public class WhiteboardViewModel extends JPanel {
         }
     }
 
-    @Scheduled(fixedDelay = 200)
+    @Scheduled(fixedDelay = 500)
     public void getWhiteboardState() {
         if (whiteboardState != null) {
             WhiteboardState currentState = whiteboardWebService.getState(whiteboardState.getName());
@@ -96,6 +96,7 @@ public class WhiteboardViewModel extends JPanel {
     public void clear() {
         if (whiteboardState != null) {
             this.whiteboardState = whiteboardWebService.clearState(this.whiteboardState.getName());
+            clearInternal();
             System.out.println("clear");
         }
     }

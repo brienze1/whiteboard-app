@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 public class WhiteboardState {
 
-    public WhiteboardState(String name, LocalDateTime clearedAt, Set<Shape> shapes) {
+    public WhiteboardState(String name, LocalDateTime cleanedAt, Set<Shape> shapes) {
         this.name = name;
-        this.clearedAt = clearedAt;
+        this.cleanedAt = cleanedAt;
         this.shapes = shapes;
     }
 
@@ -17,25 +17,25 @@ public class WhiteboardState {
     }
 
     private final String name;
-    private LocalDateTime clearedAt;
+    private LocalDateTime cleanedAt;
     private Set<Shape> shapes;
 
     public String getName() {
         return name;
     }
 
-    public LocalDateTime getClearedAt() {
-        return clearedAt;
+    public LocalDateTime getCleanedAt() {
+        return cleanedAt;
     }
 
     public void clear() {
-        this.clearedAt = LocalDateTime.now();
+        this.cleanedAt = LocalDateTime.now();
     }
 
     public boolean mustClear(WhiteboardState currentState) {
-        return Optional.ofNullable(currentState.getClearedAt())
+        return Optional.ofNullable(currentState.getCleanedAt())
                        .orElse(LocalDateTime.MIN)
-                       .isAfter(Optional.ofNullable(this.clearedAt).orElse(LocalDateTime.MIN));
+                       .isAfter(Optional.ofNullable(this.cleanedAt).orElse(LocalDateTime.MIN));
     }
 
     public boolean mustUpdate(Map<UUID, Shape> shapeMap) {

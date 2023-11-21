@@ -18,6 +18,7 @@ public class WhiteboardView {
     private final WhiteboardViewModel whiteboardViewModel;
     private final JFrame window = new JFrame();
     private final JPanel leftMenu = new JPanel();
+    private final JPanel bottomMenu = new JPanel();
     private final JTextField textInput = new JTextField();
     private final JTextField whiteboardInput = new JTextField();
     private final JButton loadButton = new JButton("Load");
@@ -26,6 +27,7 @@ public class WhiteboardView {
     private final JButton textButton = new JButton("A");
     private final JButton lineButton = new JButton("|");
     private final JButton clearButton = new JButton("X");
+    private final JButton clearAllButton = new JButton("Clear All");
 
     private Type selectedShape = null;
     private int drawingX = 0;
@@ -41,9 +43,13 @@ public class WhiteboardView {
             e1.printStackTrace();
         }
 
-        initializeWindow();
-        initializeWhiteboard();
-        initializeLeftMenu();
+        // Switch functions according to view needs, currently using new testing ones
+        // To change back to initial view,
+        // swap with initializeWindow(), initializeWhiteboard(), initializeLeftMenu()
+        // respectively
+        initializeWindowNew();
+        initializeWhiteboardTop();
+        initializeBottomMenu();
         initializeButtonActions();
 
         window.setVisible(true);
@@ -53,7 +59,7 @@ public class WhiteboardView {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Whiteboard App");
-        window.setBounds(0, 0, 700, 500);
+        window.setBounds(0, 0, 800, 500);
         window.setLayout(null);
         window.add(whiteboardViewModel);
         window.add(leftMenu);
@@ -61,20 +67,20 @@ public class WhiteboardView {
 
     private void initializeWhiteboard() {
         whiteboardViewModel.setBackground(Color.white);
-        whiteboardViewModel.setBounds(200, 0, 500, 500);
+        whiteboardViewModel.setBounds(260, 0, 650, 500);
     }
 
     private void initializeLeftMenu() {
-        squareButton.setBounds(10, 10, 30, 30);
-        circleButton.setBounds(50, 10, 30, 30);
-        textButton.setBounds(90, 10, 30, 30);
-        lineButton.setBounds(130, 10, 30, 30);
-        clearButton.setBounds(130, 90, 30, 30);
-        textInput.setBounds(10, 50, 150, 30);
+        squareButton.setBounds(10, 10, 50, 30);
+        circleButton.setBounds(70, 10, 50, 30);
+        textButton.setBounds(130, 10, 50, 30);
+        lineButton.setBounds(190, 10, 50, 30);
+        clearButton.setBounds(190, 90, 50, 30);
+        textInput.setBounds(10, 50, 230, 30);
         loadButton.setBounds(10, 370, 70, 30);
         whiteboardInput.setBounds(10, 400, 150, 30);
 
-        leftMenu.setBounds(10, 10, 170, 450);
+        leftMenu.setBounds(10, 10, 250, 450);
         leftMenu.setBorder(new BasicBorders.ButtonBorder(Color.gray, Color.darkGray, Color.gray, Color.gray));
         leftMenu.setBackground(Color.lightGray);
         leftMenu.setLayout(null);
@@ -87,6 +93,54 @@ public class WhiteboardView {
         leftMenu.add(loadButton);
         leftMenu.add(whiteboardInput);
     }
+
+    // -----------------------------------------------------------------------
+    private void initializeWindowNew() {
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setTitle("Whiteboard App");
+        window.setBounds(0, 0, 800, 500);
+        window.setLayout(null);
+        window.add(whiteboardViewModel);
+        window.add(bottomMenu);
+    }
+
+    private void initializeWhiteboardTop() {
+        whiteboardViewModel.setBackground(Color.white);
+        whiteboardViewModel.setBounds(0, 0, 800, 360);
+    }
+
+    private void initializeBottomMenu() {
+        squareButton.setBounds(10, 10, 50, 30);
+        circleButton.setBounds(70, 10, 50, 30);
+        lineButton.setBounds(130, 10, 50, 30);
+        clearAllButton.setBounds(190, 10, 110, 30);
+
+        textButton.setBounds(250, 50, 50, 30);
+        textInput.setBounds(10, 50, 230, 30);
+
+        whiteboardInput.setBounds(380, 10, 300, 30);
+        loadButton.setBounds(690, 10, 70, 30);
+
+        bottomMenu.setBounds(10, 370, 770, 90);
+        bottomMenu.setBorder(
+                new BasicBorders.ButtonBorder(
+                        Color.gray, Color.darkGray, Color.gray, Color.gray
+                )
+        );
+        bottomMenu.setBackground(Color.lightGray);
+        bottomMenu.setLayout(null);
+        bottomMenu.add(squareButton);
+        bottomMenu.add(circleButton);
+        bottomMenu.add(textButton);
+        bottomMenu.add(lineButton);
+        bottomMenu.add(clearAllButton);
+        bottomMenu.add(textInput);
+        bottomMenu.add(loadButton);
+        bottomMenu.add(whiteboardInput);
+    }
+
+    // -----------------------------------------------------------------------
 
     private void initializeButtonActions() {
         whiteboardViewModel.addMouseListener(new MouseAdapter() {

@@ -5,6 +5,8 @@ import org.brienze.whiteboard.api.viewmodel.WhiteboardViewModel;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -115,12 +117,20 @@ public class WhiteboardView {
         circleButton.setBounds(70, 10, 50, 30);
         lineButton.setBounds(130, 10, 50, 30);
         clearAllButton.setBounds(190, 10, 110, 30);
+        clearAllButton.setBackground(Color.pink);
 
-        textButton.setBounds(250, 50, 50, 30);
+        squareButton.setFocusPainted(false);
+        circleButton.setFocusPainted(false);
+        lineButton.setFocusPainted(false);
+        clearAllButton.setFocusPainted(false);
+
         textInput.setBounds(10, 50, 230, 30);
+        textButton.setBounds(250, 50, 50, 30);
+        textButton.setFocusPainted(false);
 
         whiteboardInput.setBounds(380, 10, 300, 30);
         loadButton.setBounds(690, 10, 70, 30);
+        loadButton.setFocusPainted(false);
 
         bottomMenu.setBounds(10, 370, 770, 90);
         bottomMenu.setBorder(
@@ -140,6 +150,14 @@ public class WhiteboardView {
         bottomMenu.add(whiteboardInput);
     }
 
+    private void unselectAll() {
+        squareButton.setBackground(Color.white);
+        circleButton.setBackground(Color.white);
+        lineButton.setBackground(Color.white);
+        clearAllButton.setBackground(Color.pink);
+        textButton.setBackground(Color.white);
+        loadButton.setBackground(Color.white);
+    }
     // -----------------------------------------------------------------------
 
     private void initializeButtonActions() {
@@ -181,6 +199,18 @@ public class WhiteboardView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 selectedShape = Type.RECTANGLE;
+                unselectAll();
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e.getComponent().setBackground(Color.white);
             }
         });
 
@@ -188,6 +218,18 @@ public class WhiteboardView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 selectedShape = Type.CIRCLE;
+                unselectAll();
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e.getComponent().setBackground(Color.white);
             }
         });
 
@@ -195,6 +237,18 @@ public class WhiteboardView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 selectedShape = Type.TEXT;
+                unselectAll();
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e.getComponent().setBackground(Color.white);
             }
         });
 
@@ -202,6 +256,18 @@ public class WhiteboardView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 selectedShape = Type.LINE;
+                unselectAll();
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e.getComponent().setBackground(Color.white);
             }
         });
 
@@ -210,12 +276,68 @@ public class WhiteboardView {
             public void mouseClicked(MouseEvent e) {
                 whiteboardViewModel.clear();
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e.getComponent().setBackground(Color.white);
+            }
         });
 
         loadButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 whiteboardViewModel.load(whiteboardInput.getText());
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e.getComponent().setBackground(Color.white);
+            }
+        });
+
+        clearAllButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                whiteboardViewModel.clear();
+                unselectAll();
+                e.getComponent().setBackground(Color.red);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                e.getComponent().setBackground(Color.red);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e.getComponent().setBackground(Color.white);
+            }
+        });
+
+        loadButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                whiteboardViewModel.load(whiteboardInput.getText());
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                e.getComponent().setBackground(Color.cyan);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                e.getComponent().setBackground(Color.white);
             }
         });
     }

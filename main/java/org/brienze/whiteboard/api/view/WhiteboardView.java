@@ -4,6 +4,7 @@ import org.brienze.whiteboard.api.enums.Type;
 import org.brienze.whiteboard.api.viewmodel.WhiteboardViewModel;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -11,6 +12,8 @@ import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,12 +27,16 @@ public class WhiteboardView {
     private final JTextField textInput = new JTextField();
     private final JTextField whiteboardInput = new JTextField();
     private final JButton loadButton = new JButton("Load");
-    private final JButton squareButton = new JButton("[ ]");
-    private final JButton circleButton = new JButton("( )");
+    private final Icon rectangle = new ImageIcon("../resources/rectangle.png");
+    private final JButton squareButton = new JButton("[]");
+    private final Icon circle = new ImageIcon("../resources/circle.png");
+    private final JButton circleButton = new JButton("()");
     private final JButton textButton = new JButton("A");
-    private final JButton lineButton = new JButton("|");
+    private final Icon line = new ImageIcon("../resources/line.png");
+    private final JButton lineButton = new JButton("/");
     private final JButton clearButton = new JButton("X");
     private final JButton clearAllButton = new JButton("Clear All");
+    private final JButton undoButton = new JButton("Undo");
 
     private Type selectedShape = null;
     private int drawingX = 0;
@@ -116,19 +123,22 @@ public class WhiteboardView {
         squareButton.setBounds(10, 10, 50, 30);
         circleButton.setBounds(70, 10, 50, 30);
         lineButton.setBounds(130, 10, 50, 30);
-        clearAllButton.setBounds(190, 10, 110, 30);
+        undoButton.setBounds(190, 10, 110, 30);
+        clearAllButton.setBounds(310, 10, 85, 70);
+        undoButton.setBackground(Color.pink);
         clearAllButton.setBackground(Color.pink);
 
         squareButton.setFocusPainted(false);
         circleButton.setFocusPainted(false);
         lineButton.setFocusPainted(false);
+        undoButton.setFocusPainted(false);
         clearAllButton.setFocusPainted(false);
 
         textInput.setBounds(10, 50, 230, 30);
         textButton.setBounds(250, 50, 50, 30);
         textButton.setFocusPainted(false);
 
-        whiteboardInput.setBounds(380, 10, 300, 30);
+        whiteboardInput.setBounds(410, 10, 270, 30);
         loadButton.setBounds(690, 10, 70, 30);
         loadButton.setFocusPainted(false);
 
@@ -144,6 +154,7 @@ public class WhiteboardView {
         bottomMenu.add(circleButton);
         bottomMenu.add(textButton);
         bottomMenu.add(lineButton);
+        bottomMenu.add(undoButton);
         bottomMenu.add(clearAllButton);
         bottomMenu.add(textInput);
         bottomMenu.add(loadButton);
@@ -154,6 +165,7 @@ public class WhiteboardView {
         squareButton.setBackground(Color.white);
         circleButton.setBackground(Color.white);
         lineButton.setBackground(Color.white);
+        undoButton.setBackground(Color.pink);
         clearAllButton.setBackground(Color.pink);
         textButton.setBackground(Color.white);
         loadButton.setBackground(Color.white);
@@ -202,16 +214,6 @@ public class WhiteboardView {
                 unselectAll();
                 e.getComponent().setBackground(Color.cyan);
             }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                e.getComponent().setBackground(Color.cyan);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                e.getComponent().setBackground(Color.white);
-            }
         });
 
         circleButton.addMouseListener(new MouseAdapter() {
@@ -220,16 +222,6 @@ public class WhiteboardView {
                 selectedShape = Type.CIRCLE;
                 unselectAll();
                 e.getComponent().setBackground(Color.cyan);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                e.getComponent().setBackground(Color.cyan);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                e.getComponent().setBackground(Color.white);
             }
         });
 
@@ -240,16 +232,6 @@ public class WhiteboardView {
                 unselectAll();
                 e.getComponent().setBackground(Color.cyan);
             }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                e.getComponent().setBackground(Color.cyan);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                e.getComponent().setBackground(Color.white);
-            }
         });
 
         lineButton.addMouseListener(new MouseAdapter() {
@@ -259,15 +241,23 @@ public class WhiteboardView {
                 unselectAll();
                 e.getComponent().setBackground(Color.cyan);
             }
+        });
+
+        undoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // TO DO: need to implement a function to undo last command
+                unselectAll();
+            }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                e.getComponent().setBackground(Color.cyan);
+                e.getComponent().setBackground(Color.red);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                e.getComponent().setBackground(Color.white);
+                e.getComponent().setBackground(Color.pink);
             }
         });
 
@@ -276,33 +266,6 @@ public class WhiteboardView {
             public void mouseClicked(MouseEvent e) {
                 whiteboardViewModel.clear();
             }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                e.getComponent().setBackground(Color.cyan);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                e.getComponent().setBackground(Color.white);
-            }
-        });
-
-        loadButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                whiteboardViewModel.load(whiteboardInput.getText());
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                e.getComponent().setBackground(Color.cyan);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                e.getComponent().setBackground(Color.white);
-            }
         });
 
         clearAllButton.addMouseListener(new MouseAdapter() {
@@ -310,7 +273,6 @@ public class WhiteboardView {
             public void mouseClicked(MouseEvent e) {
                 whiteboardViewModel.clear();
                 unselectAll();
-                e.getComponent().setBackground(Color.red);
             }
 
             @Override
@@ -320,7 +282,7 @@ public class WhiteboardView {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                e.getComponent().setBackground(Color.white);
+                e.getComponent().setBackground(Color.pink);
             }
         });
 
@@ -328,16 +290,6 @@ public class WhiteboardView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 whiteboardViewModel.load(whiteboardInput.getText());
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                e.getComponent().setBackground(Color.cyan);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                e.getComponent().setBackground(Color.white);
             }
         });
     }

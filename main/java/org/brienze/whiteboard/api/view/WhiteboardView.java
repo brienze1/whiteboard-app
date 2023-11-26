@@ -4,16 +4,11 @@ import org.brienze.whiteboard.api.enums.Type;
 import org.brienze.whiteboard.api.viewmodel.WhiteboardViewModel;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicBorders;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,13 +22,10 @@ public class WhiteboardView {
     private final JTextField textInput = new JTextField();
     private final JTextField whiteboardInput = new JTextField();
     private final JButton loadButton = new JButton("Load");
-    private final Icon rectangle = new ImageIcon("../resources/rectangle.png");
-    private final JButton squareButton = new JButton("[]");
-    private final Icon circle = new ImageIcon("../resources/circle.png");
-    private final JButton circleButton = new JButton("()");
+    private final JButton squareButton = new JButton(new IconMaker("Rectangle", 30, 15, 2));
+    private final JButton circleButton = new JButton(new IconMaker("Circle", 20.0, 2));
     private final JButton textButton = new JButton("A");
-    private final Icon line = new ImageIcon("../resources/line.png");
-    private final JButton lineButton = new JButton("/");
+    private final JButton lineButton = new JButton(new IconMaker("Line", 10, 2));
     private final JButton clearButton = new JButton("X");
     private final JButton clearAllButton = new JButton("Clear All");
     private final JButton undoButton = new JButton("Undo");

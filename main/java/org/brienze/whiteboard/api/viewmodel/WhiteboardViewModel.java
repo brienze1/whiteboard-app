@@ -7,17 +7,16 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Component
 public class WhiteboardViewModel extends JPanel {
 
     private final WhiteboardWebService whiteboardWebService;
-    private Map<UUID, Shape> shapeMap = new HashMap<>();
+    private Map<UUID, Shape> shapeMap = new LinkedHashMap<>();
     private WhiteboardState whiteboardState;
+    private Entry<UUID, Shape> lastEntry = null;
 
     public WhiteboardViewModel(WhiteboardWebService whiteboardWebService) {
         this.whiteboardWebService = whiteboardWebService;
@@ -101,6 +100,26 @@ public class WhiteboardViewModel extends JPanel {
         }
     }
 
+    public void undoShape() {
+        if (whiteboardState != null) {
+            try {
+                Entry<UUID, Shape> lastEntry = this.findLastEntry();
+                this.whiteboardState = whiteboardWebService.undoState(this.whiteboardState.getName(), lastEntry.getKey());
+                super.repaint();
+                this.getShapeMap().values().forEach(shape -> {
+                    if (shape.getId().equals(lastEntry.getKey())) {
+                        this.remove(lastEntry.getValue());
+                    }
+                });
+                this.getShapeMap().keySet().remove(lastEntry.getKey());
+                System.out.println("undo");
+
+            } catch (NullPointerException npe) {
+                System.out.println("No last entry");
+            }
+        }
+    }
+
     private void clearInternal() {
         super.repaint();
         this.getShapeMap().values().forEach(this::remove);
@@ -110,9 +129,18 @@ public class WhiteboardViewModel extends JPanel {
 
     private Map<UUID, Shape> getShapeMap() {
         if (this.shapeMap == null) {
-            this.shapeMap = new HashMap<>();
+            this.shapeMap = new LinkedHashMap<>();
         }
         return this.shapeMap;
     }
 
+    private Entry<UUID, Shape> findLastEntry() {
+        if (!this.shapeMap.isEmpty()) {
+            for (Entry<UUID, Shape> entry: this.shapeMap.entrySet()) {
+                lastEntry = entry;
+            }
+            return lastEntry;
+        }
+        return null;
+    }
 }

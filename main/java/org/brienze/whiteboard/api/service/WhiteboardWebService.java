@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Random;
+import java.util.UUID;
 
 @Component
 public class WhiteboardWebService {
@@ -57,5 +58,11 @@ public class WhiteboardWebService {
         return restTemplate.exchange(url + "/" + name + "/clear", HttpMethod.POST, new HttpEntity<>(headers), WhiteboardStateDto.class)
                            .getBody()
                            .toWhiteboardState();
+    }
+
+    public WhiteboardState undoState(String name, UUID lastKey) {
+        return restTemplate.exchange(url + "/" + name + "/undo/" + lastKey, HttpMethod.DELETE, new HttpEntity<>(headers), WhiteboardStateDto.class)
+                .getBody()
+                .toWhiteboardState();
     }
 }

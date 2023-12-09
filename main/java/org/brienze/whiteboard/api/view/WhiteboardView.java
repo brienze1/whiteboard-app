@@ -44,11 +44,7 @@ public class WhiteboardView {
             e1.printStackTrace();
         }
 
-        // Switch functions according to view needs, currently using new testing ones
-        // To change back to initial view,
-        // swap with initializeWindow(), initializeWhiteboard(), initializeLeftMenu()
-        // respectively
-        initializeWindowNew();
+        initializeWindow();
         initializeWhiteboardTop();
         initializeBottomMenu();
         initializeButtonActions();
@@ -57,46 +53,6 @@ public class WhiteboardView {
     }
 
     private void initializeWindow() {
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
-        window.setTitle("Whiteboard App");
-        window.setBounds(0, 0, 800, 500);
-        window.setLayout(null);
-        window.add(whiteboardViewModel);
-        window.add(leftMenu);
-    }
-
-    private void initializeWhiteboard() {
-        whiteboardViewModel.setBackground(Color.white);
-        whiteboardViewModel.setBounds(260, 0, 650, 500);
-    }
-
-    private void initializeLeftMenu() {
-        squareButton.setBounds(10, 10, 50, 30);
-        circleButton.setBounds(70, 10, 50, 30);
-        textButton.setBounds(130, 10, 50, 30);
-        lineButton.setBounds(190, 10, 50, 30);
-        clearButton.setBounds(190, 90, 50, 30);
-        textInput.setBounds(10, 50, 230, 30);
-        loadButton.setBounds(10, 370, 70, 30);
-        whiteboardInput.setBounds(10, 400, 150, 30);
-
-        leftMenu.setBounds(10, 10, 250, 450);
-        leftMenu.setBorder(new BasicBorders.ButtonBorder(Color.gray, Color.darkGray, Color.gray, Color.gray));
-        leftMenu.setBackground(Color.lightGray);
-        leftMenu.setLayout(null);
-        leftMenu.add(squareButton);
-        leftMenu.add(circleButton);
-        leftMenu.add(textButton);
-        leftMenu.add(lineButton);
-        leftMenu.add(clearButton);
-        leftMenu.add(textInput);
-        leftMenu.add(loadButton);
-        leftMenu.add(whiteboardInput);
-    }
-
-    // -----------------------------------------------------------------------
-    private void initializeWindowNew() {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Whiteboard App");
@@ -162,7 +118,6 @@ public class WhiteboardView {
         textButton.setBackground(Color.white);
         loadButton.setBackground(Color.white);
     }
-    // -----------------------------------------------------------------------
 
     private void initializeButtonActions() {
         whiteboardViewModel.addMouseListener(new MouseAdapter() {
@@ -238,7 +193,7 @@ public class WhiteboardView {
         undoButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // TO DO: need to implement a function to undo last command
+                whiteboardViewModel.undoShape();
                 unselectAll();
             }
 
